@@ -11,7 +11,7 @@
   		<table class='table'>
   		  <tr>
           <td><%= link_to(@book.user) do %>
-            <%= image_tag @book.user.get_profile_image, size:"100x100" %><br>
+            <%= image_tag @book.user.get_profile_image(100,100) %><br>
             <%= @book.user.name %>
             <% end %>
           </td>
@@ -29,6 +29,25 @@
                 <%= @book.favorites.count %>
               <% end %>
             <% end %>
+          </td>
+          <td>
+            <div>
+              <p>コメント件数：<%= @book.book_comments.count %></p>
+              <% @book.book_comments.each do |book_comment| %>
+                <p><%= image_tag book_comment.user.get_profile_image(100,100) %></p>
+                <%= book_comment.user.name %>
+                <%= book_comment.comment %>
+                <% if book_comment.user == current_user %>
+                  <%= link_to "削除",  book_book_comment_path(book_comment.book, book_comment), method: :delete %>
+                <% end %>
+              <% end %>
+            </div>
+            <div>
+              <%= form_with model: [@book, @book_comment] do |f| %>
+                <%= f.text_area :comment, rows: '5' %>
+                <%= f.submit "送信" %>
+              <% end %>
+            </div>
           </td>
             <% if @book.user == current_user %>
               <td><%= link_to 'Edit', edit_book_path(@book), class: "btn btn-sm btn-success" %></td>
